@@ -108,7 +108,7 @@ Read data from file:
     Opening raw data ...
     Ready.
     >>> print raw
-    Raw (n_channels x n_times : 376 x 41700)
+    <Raw  |  n_channels x n_times : 376 x 41700>
 
 Read and plot a segment of raw data
 
@@ -176,14 +176,14 @@ Read epochs:
     Created an SSP operator (subspace dimension = 4)
     72 matching events found
     >>> print epochs
-    Epochs (n_events : 145 (good & bad), tmin : -0.2 (s), tmax : 0.5 (s), baseline : (None, 0))
+    <Epochs  |  n_events : 145 (good & bad), tmin : -0.2 (s), tmax : 0.5 (s), baseline : (None, 0)>
 
 Compute evoked auditory responses by averaging and plot it:
 
     >>> evoked = epochs['aud_l'].average() # doctest: +ELLIPSIS
     Reading ...
     >>> print evoked
-    Evoked (comment : Unknown, time : [-0.199795, 0.492828], n_epochs : 72, n_channels x n_times : 364 x 105)
+    <Evoked  |  comment : 'Unknown', time : [-0.199795, 0.492828], n_epochs : 72, n_channels x n_times : 364 x 105>
     >>> evoked.plot()
 
 .. figure:: images/plot_read_epochs.png
