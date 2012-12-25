@@ -183,7 +183,7 @@ Compute evoked auditory responses by averaging and plot it:
     >>> evoked = epochs['aud_l'].average() # doctest: +ELLIPSIS
     Reading ...
     >>> print evoked
-    <Evoked  |  comment : 'Unknown', time : [-0.199795, 0.492828], n_epochs : 72, n_channels x n_times : 364 x 105>
+    <Evoked  |  comment : 'aud_l', time : [-0.199795, 0.492828], n_epochs : 72, n_channels x n_times : 364 x 105>
     >>> evoked.plot()
 
 .. figure:: images/plot_read_epochs.png
