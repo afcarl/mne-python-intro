@@ -7,6 +7,7 @@ SPHINXBUILD   = sphinx-build
 PAPER         =
 BUILDDIR      = ../webpage
 NOSETESTS ?= nosetests
+GHPIMPORT     = ghp-import
 
 # Internal variables.
 PAPEROPT_a4     = -D latex_paper_size=a4
@@ -29,12 +30,10 @@ help:
 	@echo "  changes   to make an overview of all changed/added/deprecated items"
 	@echo "  linkcheck to check all external links for integrity"
 	@echo "  doctest   to run all doctests embedded in the documentation (if enabled)"
+	@echo "  github    publish on github
 
 clean:
 	-rm -rf $(BUILDDIR)/*
-	-rm -rf auto_examples/
-	-rm -rf doc/generated/*
-	-rm -rf modules/generated/*
 
 html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
@@ -99,16 +98,10 @@ doctest:
 	@echo "Testing of doctests in the sources finished, look at the " \
 	      "results in $(BUILDDIR)/doctest/output.txt."
 
-install: html
-	rm -rf ../webpage/nisl.github.com
-	cd ../webpage/ && \
-	git clone git@github.com:nisl/nisl.github.com.git && \
-	cp -r html/* nisl.github.com && \
-	cd nisl.github.com && \
-	git add * && \
-	git commit -a -m 'Make install' && \
-	git push
+github:
+	@echo "Send to github"
+	touch ../webpage/html/.nojekyll
+	$(GHPIMPORT) -p $(BUILDDIR)/html
 
 test:
 	$(NOSETESTS) . --with-doctest --doctest-tests --doctest-extension=rst
-
