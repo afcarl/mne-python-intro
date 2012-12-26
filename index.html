@@ -3,13 +3,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>Intro to MEG and EEG processing with MNE and Python &mdash; M/EEG data analysis with MNE and Python</title>
+    
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
@@ -87,16 +90,16 @@
             
   <div class="section" id="intro-to-meg-and-eeg-processing-with-mne-and-python">
 <h1>Intro to MEG and EEG processing with MNE and Python<a class="headerlink" href="#intro-to-meg-and-eeg-processing-with-mne-and-python" title="Permalink to this headline">¶</a></h1>
-<p><strong>Authors:</strong> A. Gramfort and M. Hämäläinen</p>
+<p><strong>Authors:</strong> A. Gramfort, E. Larson, M. Luessi, D. Engemann, C. M. Brodbeck, M. Hämäläinen</p>
 <div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="mne-python-the-project-vision">
 <h3>MNE Python: The project vision<a class="headerlink" href="#mne-python-the-project-vision" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><ul class="simple">
-<li><strong>Make your life easier</strong> when interacting <strong>with MEG/EEG data</strong></li>
+<li>Make interacting <strong>with MEG/EEG data</strong> more <strong>fun</strong>.</li>
 <li><strong>Open</strong> project: very permissive BSD license, open version control system to facilitate contributions</li>
-<li>The project should be maintained by a <strong>community of labs</strong></li>
+<li>The project is being maintained by a <strong>community of labs</strong></li>
 </ul>
 </div></blockquote>
 </div>
@@ -104,10 +107,8 @@
 <h3>What you&#8217;re not supposed to do with MNE Python<a class="headerlink" href="#what-you-re-not-supposed-to-do-with-mne-python" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><ul class="simple">
-<li><strong>Process raw files</strong>: In short everything you do with <em>mne_process_raw</em> (filtering, computing SSP vectors, downsampling etc.)</li>
 <li><strong>Forward modeling</strong>: BEM computation and mesh creation (done with FreeSurfer)</li>
-<li><strong>Raw data visualization</strong> done with <em>mne_browse_raw</em></li>
-<li><strong>MNE source estimates visualization</strong> done with <em>mne_analyze</em></li>
+<li><strong>Interactive raw data visualization</strong> done with <em>mne_browse_raw</em></li>
 </ul>
 </div></blockquote>
 </div>
@@ -115,13 +116,18 @@
 <h3>What you can do with MNE Python<a class="headerlink" href="#what-you-can-do-with-mne-python" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><ul class="simple">
-<li><strong>Epoching</strong>: Define epochs, baseline correction etc.</li>
+<li><strong>Process raw files</strong>: In short everything you do with <em>mne_process_raw</em> (filtering, computing SSP vectors, downsampling etc.)</li>
+<li><strong>Independent Component Analysis</strong>: on raw and epochs data.</li>
+<li><strong>Epoching</strong>: Define epochs, baseline correction, drop bad epochs, handle epochs across conditions etc.</li>
 <li><strong>Averaging</strong> to get Evoked data</li>
-<li><strong>Linear inverse solvers</strong> (dSPM, MNE)</li>
-<li><strong>Time-frequency</strong> analysis with Morlet wavelets (induced power, phase lock value) also in the source space</li>
 <li><strong>Compute contrasts</strong> between conditions, between sensors, across subjects etc.</li>
+<li><strong>Linear inverse solvers</strong> (dSPM, MNE, MxNE, beamformer)</li>
+<li><strong>Interactive MNE source estimates visualization</strong></li>
+<li><strong>Time-frequency</strong> analysis with Morlet wavelets (induced power, phase lock value) also in the source space</li>
+<li><strong>Connectivity Estimation</strong> visualize and analyse connectivity between sensors or between ROIs in source space.</li>
 <li><strong>Non-parametric statistics</strong> in time, space and frequency (including with cluster-level)</li>
 <li><strong>Scripting</strong> (batch and parallel computing)</li>
+<li><strong>Export data</strong> embedded export to other Python libraries, i.e. NiTime and Panda, using methods provided for raw, epochs, and evoked objects</li>
 </ul>
 </div></blockquote>
 <div class="admonition note">
@@ -148,7 +154,8 @@
 <p>The Python scientific computing environment: <strong>Numpy</strong>, <strong>Scipy</strong>, also the <strong>scikit-learn</strong> (optional).
 Numpy provides data structures (array,
 matrices) and Scipy provides algorithms (linear algebra, signal processing, etc.). For parallel computing
-it uses <a class="reference external" href="http://http://packages.python.org/joblib/">joblib</a> shipped with the <a class="reference external" href="http://http://scikit-learn.sourceforge.net/">scikit-learn</a> .</p>
+it uses <a class="reference external" href="http://packages.python.org/joblib/">joblib</a> shipped with the <a class="reference external" href="http://scikit-learn.sourceforge.net/">scikit-learn</a> .</p>
+<p>The embedded exporters require Pandas and NiTime:</p>
 <div class="section" id="get-the-code">
 <h4>Get the code<a class="headerlink" href="#get-the-code" title="Permalink to this headline">¶</a></h4>
 <blockquote>
@@ -183,11 +190,12 @@ it uses <a class="reference external" href="http://http://packages.python.org/jo
 <span class="go">Opening raw data ...</span>
 <span class="go">Ready.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">raw</span>
-<span class="go">Raw (n_channels x n_times : 376 x 41700)</span>
+<span class="go">&lt;Raw  |  n_channels x n_times : 376 x 41700&gt;</span>
 </pre></div>
 </div>
 <p>Read and plot a segment of raw data</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">time_to_index</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">115</span><span class="p">)</span>  <span class="c"># 100 s to 115 s data segment</span>
+<blockquote>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">time_to_index</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">115</span><span class="p">)</span>  <span class="c"># 100 s to 115 s data segment</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="p">,</span> <span class="n">times</span> <span class="o">=</span> <span class="n">raw</span><span class="p">[:,</span> <span class="n">start</span><span class="p">:</span><span class="n">stop</span><span class="p">]</span>
 <span class="go">Reading 21465 ... 23716  =    142.953 ...   157.945 secs...  [done]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span>
@@ -198,6 +206,8 @@ it uses <a class="reference external" href="http://http://packages.python.org/jo
 <span class="go">Reading 21465 ... 23716  =    142.953 ...   157.945 secs...  [done]</span>
 </pre></div>
 </div>
+<p>## TODO plot command?</p>
+</div></blockquote>
 <div class="figure">
 <img alt="Raw data" src="_images/plot_read_raw_data.png" />
 </div>
@@ -221,8 +231,8 @@ it uses <a class="reference external" href="http://http://packages.python.org/jo
 <span class="go"> [7413    0    2]]</span>
 </pre></div>
 </div>
-<p>Define epochs parameters:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">event_id</span> <span class="o">=</span> <span class="mi">1</span>
+<p>Define epochs parameters and handle conditions:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">event_id</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">aud_l</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">vis_l</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tmin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.2</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tmax</span> <span class="o">=</span> <span class="mf">0.5</span>
 </pre></div>
@@ -249,16 +259,15 @@ it uses <a class="reference external" href="http://http://packages.python.org/jo
 <span class="go">Created an SSP operator (subspace dimension = 4)</span>
 <span class="go">72 matching events found</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">epochs</span>
-<span class="go">Epochs (n_events : 72, tmin : -0.2 (s), tmax : 0.5 (s), baseline : (None, 0))</span>
+<span class="go">&lt;Epochs  |  n_events : 145 (good &amp; bad), tmin : -0.2 (s), tmax : 0.5 (s), baseline : (None, 0)&gt;</span>
 </pre></div>
 </div>
-<p>Compute evoked responses by averaging and plot it:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">evoked</span> <span class="o">=</span> <span class="n">epochs</span><span class="o">.</span><span class="n">average</span><span class="p">()</span> 
+<p>Compute evoked auditory responses by averaging and plot it:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">evoked</span> <span class="o">=</span> <span class="n">epochs</span><span class="p">[</span><span class="s">&#39;aud_l&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">average</span><span class="p">()</span> 
 <span class="go">Reading ...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">evoked</span>
-<span class="go">Evoked (comment : Unknown, time : [-0.199795, 0.492828], n_epochs : 72, n_channels x n_times : 364 x 105)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">mne.viz</span> <span class="kn">import</span> <span class="n">plot_evoked</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plot_evoked</span><span class="p">(</span><span class="n">evoked</span><span class="p">)</span>
+<span class="go">&lt;Evoked  |  comment : &#39;aud_l&#39;, time : [-0.199795, 0.492828], n_epochs : 72, n_channels x n_times : 364 x 105&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">evoked</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
 </pre></div>
 </div>
 <div class="figure">
@@ -347,7 +356,13 @@ it uses <a class="reference external" href="http://http://packages.python.org/jo
 <h2>What else can you do?<a class="headerlink" href="#what-else-can-you-do" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul class="simple">
+<li>plot and analyze connectivity in sensor and source space</li>
+<li>plot time frequency representations for all channels on sensor layout</li>
+<li>plot time epochs images for all channels on sensor layout to visualize cross-trial response dynamics</li>
+<li>decompose and automatically identify latent sources using ICA</li>
+<li>sensor space analyses in ICA space</li>
 <li>morph stc from one brain to another for group studies</li>
+<li>interactively visualize source estimates</li>
 <li>estimate power in the source space</li>
 <li>estimate noise covariance matrix from Raw and Epochs</li>
 <li>detect heart beat QRS component</li>
@@ -359,9 +374,11 @@ it uses <a class="reference external" href="http://http://packages.python.org/jo
 <h2>What comes next?<a class="headerlink" href="#what-comes-next" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul class="simple">
-<li>sparse solvers</li>
-<li>beamformers (e.g. LCMV)</li>
-<li>coherence measures</li>
+<li>frequency domain beamformers (e.g. DICS)</li>
+<li>improved M/EEG data simulation utilities</li>
+<li>band-stop and notch-filters for removal of power line artifacts</li>
+<li>GLM framework for improved analysis of factorial experimental designs</li>
+<li>improved support for other MEG systems</li>
 <li>anything you want to contribute for the community !</li>
 </ul>
 </div></blockquote>
@@ -373,16 +390,28 @@ it uses <a class="reference external" href="http://http://packages.python.org/jo
 <p class="caption">2D toprography</p>
 </div>
 <div class="figure">
-<img alt="Cluster level stat in time Frequency decomposition" src="_images/plot_cluster_1samp_test_time_frequency.png" />
-<p class="caption">Cluster level stat in time Frequency decomposition</p>
+<img alt="Compare conditions across channels" src="_images/plot_topo_conditions_example.png" />
+<p class="caption">Compare conditions across channels</p>
+</div>
+<div class="figure">
+<img alt="Cluster level stat in time frequency decomposition" src="_images/plot_cluster_1samp_test_time_frequency.png" />
+<p class="caption">Cluster level stat in time frequency decomposition</p>
 </div>
 <div class="figure">
 <img alt="Topography of cluster level stat in time" src="_images/cluster_full_layout_c0-c1.png" />
 <p class="caption">Topography of cluster level stat in time</p>
 </div>
 <div class="figure">
-<img alt="Statistics on evoked data" src="_images/plot_cluster_stats_evoked.png" />
-<p class="caption">Statistics on evoked data</p>
+<img alt="Sensor space connectivity" src="_images/cwt_sensor_connectivity.png" />
+<p class="caption">Sensor space connectivity</p>
+</div>
+<div class="figure">
+<img alt="Cross-trial response dynamics" src="_images/epochs_image.png" />
+<p class="caption">Cross-trial response dynamics</p>
+</div>
+<div class="figure">
+<img alt="Independent Component Analysis" src="_images/plot_ica_panel.png" />
+<p class="caption">Independent Component Analysis</p>
 </div>
 </div>
 <div class="section" id="want-to-know-more-go-to-martinos-org-mne-and-browse-examples-gallery">
@@ -400,7 +429,7 @@ it uses <a class="reference external" href="http://http://packages.python.org/jo
 
     <div class="footer">
         &copy; Copyright 2011, Alexandre Gramfort.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>
