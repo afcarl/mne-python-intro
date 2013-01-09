@@ -2,7 +2,7 @@
 Intro to MEG and EEG processing with MNE and Python
 ===================================================
 
-**Authors:** A. Gramfort, E. Larson, M. Luessi, D. Engemann, C. M. Brodbeck, M. Hämäläinen
+**Authors:** A. Gramfort, E. Larson, M. Luessi, D. Engemann, C. M. Brodbeck, D. Strohmeier, M. Hämäläinen
 
 .. role:: input(strong)
 
